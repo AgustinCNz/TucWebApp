@@ -1,9 +1,9 @@
+// Importa la vista principal Home
+import Home from './pages/Home'
+
+// Muestra la landing completa a través de Home.jsx
 function App() {
-  return (
-    <div className="bg-green-500 text-white p-10 text-center text-2xl">
-      Tailwind funciona perfecto 💚
-    </div>
-  )
+  return <Home />
 }
 
 export default App
