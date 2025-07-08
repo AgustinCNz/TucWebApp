@@ -1,7 +1,15 @@
 import { pool } from '../config/db.js'
 
 export const registrarUsuario = async (req, res) => {
-  const { uid, email, plan } = req.body
+  const { uid, email, plan = 'free' } = req.body
+try { 
+  const [result] = await pool.query( 'INSERT INTO usuarios (uid, email, plan) VALUES (?, ?, ?)', [uid, email, plan]
+);
+res.status(201).json({ uid, email, plan });
+} catch (error) {
+  console.error("Error al registrar usuario:", error.mensaje);
+  res.status(500).json({ error: "No se pudo registrar el usuario" });
+};
 
   try {
     const [existing] = await pool.query('SELECT * FROM usuarios WHERE uid = ?', [uid])
