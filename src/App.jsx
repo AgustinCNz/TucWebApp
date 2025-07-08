@@ -31,7 +31,8 @@ function App() {
           <Route path="landing" element={<Landing />} />
         </Route>
       )}
-
+      {/* 🔄 Nueva ruta para mostrar info del plan y upgrades */}
+      <Route path="upgrade" element={<Upgrade />} />
       {/* Redirección según sesión */}
       <Route
         path="*"
