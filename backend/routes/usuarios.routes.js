@@ -18,5 +18,22 @@ router.get('/:uid', async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' })
   }
 })
+// Define una ruta para registrar un nuevo usuario
+// Esta ruta recibe un UID y un email, y guarda el usuario en la base de datos
+
+router.put('/:uid', async (req, res) => {
+  const { uid } = req.params
+  const { plan } = req.body
+
+  try {
+    await pool.query('UPDATE usuarios SET plan = ? WHERE uid = ?', [plan, uid])
+    res.json({ message: 'Usuario actualizado' })
+  } catch (error) {
+    console.error('Error al actualizar usuario:', error.message)
+    res.status(500).json({ error: 'Error interno del servidor' })
+  }
+})
+// Exporta el router para usarlo en el servidor principal
+// Esto permite que las rutas definidas aquí estén disponibles en el servidor
 
 export default router
