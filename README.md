@@ -12,6 +12,12 @@ TucWeb es una plataforma desarrollada con **React 19 + Vite + Tailwind CSS + Fir
 - Diseño responsive moderno con Tailwind
 - Sistema modular pensado para escalar funcionalidades
 - Formulario de contacto funcional (envía al backend)
+- Registro simultáneo en base de datos MySQL.
+- Inicio de sesión validado contra Firebase y MySQL.
+- Estado de sesión global con Zustand.
+- Rutas protegidas usando React Router.
+- Dashboard privado con Layout fijo y botón de logout.
+- Navbar inteligente según estado de sesión.
 
 ---
 
@@ -38,8 +44,14 @@ TucWeb es una plataforma desarrollada con **React 19 + Vite + Tailwind CSS + Fir
 
 /TucWeb
 │
-├── /src
-│ ├── /components # Componentes reutilizables como Hero, Navbar, Formulario, etc.
+/src
+├── components # Componentes reutilizables
+├── layouts # Layouts principales (ej: DashboardLayout)
+├── lib # Config Firebase y libs
+├── pages # Vistas principales (Login, Register, Dashboard)
+├── services # api.js con requests a backend
+├── store # Zustand (auth)
+├── App.jsx # Enrutador principal
 │ ├── /pages # Home, Login, Register, Dashboard
 │ ├── /services # Conexión con backend (api.js)
 │ ├── /store # Zustand (estado global de auth)
@@ -60,6 +72,19 @@ TucWeb es una plataforma desarrollada con **React 19 + Vite + Tailwind CSS + Fir
 
 
 ---
+
+## 🔜 Próximos pasos (Backlog)
+
+1. ✅ Sistema de autenticación con Firebase + MySQL ✔️
+2. 🔄 Modularización basada en planes de usuario (FREE / PREMIUM)
+3. 📦 Carga dinámica de secciones (ej: estadísticas, herramientas, landing pages)
+4. 🎯 Aplicar principios SOLID + Abstract Factory / Method Pattern
+5. 🧠 Persistencia de sesión con `onAuthStateChanged`
+6. 📈 Sistema de upgrades/pagos por plan
+7. 📤 Integración con pasarelas de pago (Stripe / MercadoPago)
+8. 🔒 Middleware de protección de rutas y componentes
+9. 🧪 Testing de unidades críticas (formulario, login, registro)
+10. ☁️ Despliegue en Vercel / Railway / PlanetScale
 
 ## 🛠 Cómo correr el proyecto
 
