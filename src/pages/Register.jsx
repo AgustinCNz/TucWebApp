@@ -2,6 +2,7 @@ import { useState } from "react"
 import { createUserWithEmailAndPassword } from "firebase/auth"
 import { auth } from "../lib/firebase"
 import { registrarUsuarioDB } from '../services/api' // función que guarda el usuario en tu MySQL
+import { Link } from "react-router-dom"
 
 export default function Register() {
   // Estado para el formulario
@@ -93,6 +94,9 @@ export default function Register() {
             Registrarme
           </button>
         </form>
+        <Link to="/" className="block text-center mt-6 text-blue-600 hover:underline">
+        Volver al inicio
+      </Link>
       </div>
     </div>
   )
