@@ -8,9 +8,13 @@ import App from './App.jsx'
 // Importa estilos globales de Tailwind CSS
 import './index.css'
 
+import { BrowserRouter } from 'react-router-dom'
+
 // Renderiza la app dentro del div #root en index.html
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>
 )
