@@ -1,5 +1,20 @@
+import UpgradeBanner from './UpgradeBanner'
+import EstadisticasPremium from './EstadisticasPremium'
+
 export default function Dashboard() {
-  return <h2 className="text-2xl font-bold">Bienvenido a tu panel</h2>
+  return (
+    <div>
+      <h1 className="text-2xl font-bold mb-4">Bienvenido a tu panel</h1>
+      {/* Banner de actualización de plan */}
+      <UpgradeBanner />
+      
+
+
+
+      {/* Sección exclusiva para usuarios premium */}
+      <EstadisticasPremium />
+
+      {/* Aquí podés sumar más secciones comunes */}
+    </div>
+  )
 }
-// Este componente Dashboard es la página principal del panel de usuario.
-// Muestra un mensaje de bienvenida al usuario autenticado.
