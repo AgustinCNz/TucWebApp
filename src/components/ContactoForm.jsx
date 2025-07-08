@@ -1,5 +1,6 @@
 // Formulario de contacto que después conectaremos al backend
 import { useState } from "react"
+import {enviarContacto} from "../services/api" // Asegúrate de crear este servicio
 
 export default function ContactoForm() {
   const [form, setForm] = useState({
@@ -13,12 +14,16 @@ export default function ContactoForm() {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log("Formulario enviado:", form)
-    alert("Gracias por tu mensaje. Te responderemos pronto.")
-    setForm({ nombre: "", email: "", whatsapp: "", mensaje: "" })
-    // Aquí después conectamos al backend
+    try {
+      await enviarContacto(form)
+      alert("Mensaje enviado correctamente.")
+      setForm({ nombre: "", email: "", whatsapp: "", mensaje: "" }) // Limpiar el formulario
+    } catch (error) {
+      console.error("Error al enviar el mensaje:", error)
+      alert("Hubo un error al enviar el mensaje.")
+    }
   }
 
   return (
