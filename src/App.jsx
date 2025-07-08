@@ -1,6 +1,7 @@
 import { Route, Routes, Navigate } from 'react-router-dom'
 import { useAuthStore } from './store/useAuthStore'
 
+import Upgrade from './pages/dashboard/Upgrade'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
