@@ -1,6 +1,7 @@
 import { Route, Routes, Navigate } from 'react-router-dom'
 import { useAuthStore } from './store/useAuthStore'
 
+import Upgrade from './pages/dashboard/Upgrade'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -34,7 +35,8 @@ function App() {
           <Route path="crear-landing" element={<CrearLanding />} />
         </Route>
       )}
-
+      {/* 🔄 Nueva ruta para mostrar info del plan y upgrades */}
+      <Route path="upgrade" element={<Upgrade />} />
       {/* Redirección según sesión */}
       <Route
         path="*"

@@ -16,16 +16,38 @@ export default function DashboardLayout() {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="bg-black text-white p-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold">TucWeb Panel</h1>
-        <div className="space-x-4 flex items-center">
-            <span className="text-sm">Hola, {user?.email}</span>
-            <Link to="/dashboard" className="hover:underline">Inicio</Link>
-            <Link to="/dashboard/landing" className="hover:underline">Mi Landing</Link>
-            <button onClick={handleLogout} className="bg-red-500 px-4 py-1 rounded hover:bg-red-600">
-            Cerrar sesión
-            </button>
-        </div>
-        </header>
+  <h1 className="text-xl font-bold">TucWeb Panel</h1>
+  <div className="space-x-4 flex items-center">
+    <span className="text-sm">Hola, {user?.email}</span>
+    <Link to="/dashboard" className="hover:underline">Inicio</Link>
+    <Link to="/dashboard/landing" className="hover:underline">Mi Landing</Link>
+
+    {/* 🔐 Solo visible si es usuario premium */}
+    {user?.plan === 'premium' && (
+      <Link to="/dashboard/estadisticas" className="hover:underline">
+        Estadísticas
+      </Link>
+    )}
+
+    {/* ⚠️ Aviso si es plan free */}
+    {user?.plan === 'free' && (
+      <Link
+        to="/dashboard/upgrade"
+        className="text-yellow-300 hover:underline"
+      >
+        ¡Mejorá tu plan!
+      </Link>
+    )}
+
+    <button
+      onClick={handleLogout}
+      className="bg-red-500 px-4 py-1 rounded hover:bg-red-600"
+    >
+      Cerrar sesión
+    </button>
+  </div>
+</header>
+
 
 
       <main className="flex-grow bg-gray-100 p-6">
