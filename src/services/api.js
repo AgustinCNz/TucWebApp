@@ -92,3 +92,28 @@ export const actualizarUsuario = async (uid, data) => {
     throw error
   }
 }
+
+// 🆕 Crear una nueva landing page
+export async function crearLanding(data) {
+  const response = await fetch('http://localhost:3000/api/landings', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  })
+  if (!response.ok) throw new Error('Error al crear landing')
+  return await response.json()
+}
+
+export async function obtenerLandings(uid) {
+  const response = await fetch(`http://localhost:3000/api/landings/${uid}`)
+  if (!response.ok) throw new Error('Error al obtener landings')
+  return await response.json()
+}
+
+const API = 'http://localhost:3000/api'
+
+export const obtenerLandingPorId = async (id) => {
+  const res = await fetch(`${API_URL}/landings/${id}`)
+  if (!res.ok) throw new Error('Error al obtener landing por ID')
+  return await res.json()
+}

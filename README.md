@@ -6,18 +6,17 @@ TucWeb es una plataforma desarrollada con **React 19 + Vite + Tailwind CSS + Fir
 
 ## 🚀 Funcionalidades actuales
 
-- Página principal (Landing institucional de TucWeb)
-- Registro de usuarios con Firebase Auth
-- Almacenamiento de usuarios en MySQL
-- Diseño responsive moderno con Tailwind
-- Sistema modular pensado para escalar funcionalidades
-- Formulario de contacto funcional (envía al backend)
-- Registro simultáneo en base de datos MySQL.
-- Inicio de sesión validado contra Firebase y MySQL.
-- Estado de sesión global con Zustand.
-- Rutas protegidas usando React Router.
-- Dashboard privado con Layout fijo y botón de logout.
-- Navbar inteligente según estado de sesión.
+- Registro y login de usuarios (Firebase Auth + MySQL)
+- Estado de sesión persistente con Zustand
+- Dashboard privado personalizado
+- Creación de Landing Pages con formulario visual
+- Vista de todas las landings creadas por el usuario
+- Diseño moderno y responsive con Tailwind CSS
+- Enrutado protegido con React Router
+- API RESTful con Express.js
+- Conexión segura con base de datos MySQL
+- Formulario de contacto funcional
+- Arquitectura escalable lista para SaaS
 
 ---
 
@@ -28,15 +27,73 @@ TucWeb es una plataforma desarrollada con **React 19 + Vite + Tailwind CSS + Fir
   - Vite
   - Tailwind CSS
   - Firebase Auth
-  - Zustand (gestión de sesión)
+  - Zustand (estado global)
+  - React Router DOM
+
 - **Backend:**
   - Node.js
   - Express
   - MySQL
-  - Cors y dotenv para seguridad
+  - Cors, Dotenv, Fetch
+
 - **Otros:**
   - GitHub como control de versiones
-  - Arquitectura modular profesional
+  - Arquitectura modular y escalable
+  - Proyecto pensado para SaaS (subdominios, upgrades, etc.)
+
+---
+
+## 📁 Estructura del Proyecto
+
+ChatGPT Plus
+Perfecto Luis. Acá tenés el nuevo README.md actualizado al día de hoy, incluyendo todo lo que ya implementaste, corregido y listo para commit.
+
+✅ CONTENIDO PARA README.md (solo copiar y pegar):
+markdown
+Copiar
+Editar
+# TucWeb - Plataforma de Landing Pages Auto-administrables
+
+TucWeb es una plataforma desarrollada con **React 19 + Vite + Tailwind CSS + Firebase Auth + Express + MySQL**, que permite a negocios, emprendedores y marcas personales crear su propia landing page en minutos mediante un panel simple e intuitivo.
+
+---
+
+## 🚀 Funcionalidades actuales
+
+- Registro y login de usuarios (Firebase Auth + MySQL)
+- Estado de sesión persistente con Zustand
+- Dashboard privado personalizado
+- Creación de Landing Pages con formulario visual
+- Vista de todas las landings creadas por el usuario
+- Diseño moderno y responsive con Tailwind CSS
+- Enrutado protegido con React Router
+- API RESTful con Express.js
+- Conexión segura con base de datos MySQL
+- Formulario de contacto funcional
+- Arquitectura escalable lista para SaaS
+
+---
+
+## 🔐 Tecnologías utilizadas
+
+- **Frontend:**
+  - React 19
+  - Vite
+  - Tailwind CSS
+  - Firebase Auth
+  - Zustand (estado global)
+  - React Router DOM
+
+- **Backend:**
+  - Node.js
+  - Express
+  - MySQL
+  - Cors, Dotenv, Fetch
+
+- **Otros:**
+  - GitHub como control de versiones
+  - Arquitectura modular y escalable
+  - Proyecto pensado para SaaS (subdominios, upgrades, etc.)
 
 ---
 
@@ -44,92 +101,82 @@ TucWeb es una plataforma desarrollada con **React 19 + Vite + Tailwind CSS + Fir
 
 /TucWeb
 │
-/src
-├── components # Componentes reutilizables
-├── layouts # Layouts principales (ej: DashboardLayout)
-├── lib # Config Firebase y libs
-├── pages # Vistas principales (Login, Register, Dashboard)
-├── services # api.js con requests a backend
-├── store # Zustand (auth)
-├── App.jsx # Enrutador principal
-│ ├── /pages # Home, Login, Register, Dashboard
-│ ├── /services # Conexión con backend (api.js)
-│ ├── /store # Zustand (estado global de auth)
-│ ├── /lib # Configuración Firebase
+├── /src
+│ ├── components # Componentes reutilizables
+│ ├── layouts # Layouts generales como DashboardLayout
+│ ├── lib # Firebase config
+│ ├── pages # Páginas principales (Login, Register, Dashboard, etc.)
+│ ├── services # api.js con todas las funciones de backend
+│ ├── store # Zustand store para autenticación
 │ ├── App.jsx # Enrutador principal
-│ └── main.jsx # Entrada del proyecto React
+│ └── main.jsx # Entrada de React
 │
 ├── /backend
-│ ├── /controllers # Lógica de negocio de usuarios, contacto, etc.
-│ ├── /routes # Endpoints de API
-│ ├── /config # Configuración de conexión a MySQL
-│ └── index.js # Servidor principal Express
+│ ├── config # Conexión MySQL
+│ ├── controllers # Lógica backend por módulo (usuarios, landings, etc.)
+│ ├── routes # Endpoints de la API
+│ └── index.js # Servidor Express principal
 │
-├── .env
-├── .gitignore
+├── .env # Variables de entorno
 ├── package.json
-└── README.md
+├── README.md
 
 
 ---
 
-## 🔜 Próximos pasos (Backlog)
-
-1. ✅ Sistema de autenticación con Firebase + MySQL ✔️
-2. 🔄 Modularización basada en planes de usuario (FREE / PREMIUM)
-3. 📦 Carga dinámica de secciones (ej: estadísticas, herramientas, landing pages)
-4. 🎯 Aplicar principios SOLID + Abstract Factory / Method Pattern
-5. 🧠 Persistencia de sesión con `onAuthStateChanged`
-6. 📈 Sistema de upgrades/pagos por plan
-7. 📤 Integración con pasarelas de pago (Stripe / MercadoPago)
-8. 🔒 Middleware de protección de rutas y componentes
-9. 🧪 Testing de unidades críticas (formulario, login, registro)
-10. ☁️ Despliegue en Vercel / Railway / PlanetScale
-
 ## 🛠 Cómo correr el proyecto
 
-1. Clonar el repositorio:
-   ```bash
-   git clone https://github.com/AgustinCNz/TucWeb.git
+### 1. Clonar el repositorio
 
-2. Instalar dependencias (frontend y backend):
-``` bash
+```bash
+git clone https://github.com/AgustinCNz/TucWeb.git
+
+
+2. Instalar dependencias
+# Frontend
 cd TucWeb
 npm install
+
+# Backend
 cd backend
 npm install
-```
-3. Configurar entorno .env en /backend:
+
+3. Configurar .env en /backend
 
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=tu_pass
 DB_NAME=tucweb
 
-4. Iniciar Frontend y backend:
-``` bash
-# Terminal 1
+4. Iniciar proyecto
+
+# Terminal 1 (frontend)
 npm run dev
 
-# Terminal 2 (dentro de /backend)
+# Terminal 2 (backend)
 npm run dev
-```
 
-🧠 Próximas funcionalidades
-Login de usuarios y sistema de sesión
 
-Panel privado con rutas protegidas
+📌 Próximos pasos
+Editar landings existentes ✅
 
-Generación de landing page personalizada
+Eliminar landings
 
-Planes premium con módulos avanzados
+Vista pública con preview personalizado
 
-Dominio personalizado o subdominio tipo usuario.tucweb.com
+Subdominios o URLs amigables para cada landing
+
+Planes premium y upgrade por cuenta
+
+Integración con Stripe / MercadoPago
+
+Subida de imágenes (Firebase Storage / Cloudinary)
+
+Despliegue automático en Vercel
 
 👨‍💻 Autor
 Luis Agustin Correa Núñez
 📍 San Miguel de Tucumán, Argentina
 📧 gustin_correa@hotmail.com
 🌐 Instagram: @agustin_correa01
-🥷 Github: https://github.com/AgustinCNz
-
+💻 GitHub: AgustinCNz

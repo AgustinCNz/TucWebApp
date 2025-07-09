@@ -6,7 +6,8 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import DashboardLayout from './layouts/DashboardLayout'
 import Dashboard from './pages/dashboard/index'
-import Landing from './pages/dashboard/landing'
+import Landing from './pages/dashboard/Landing'
+import CrearLanding from './pages/dashboard/CrearLanding'
 
 function App() {
   const { user } = useAuthStore()
@@ -27,8 +28,10 @@ function App() {
       {/* Rutas privadas (requieren sesión) */}
       {user && (
         <Route path="/dashboard" element={<DashboardLayout />}>
+          
           <Route index element={<Dashboard />} />
           <Route path="landing" element={<Landing />} />
+          <Route path="crear-landing" element={<CrearLanding />} />
         </Route>
       )}
 
@@ -36,6 +39,7 @@ function App() {
       <Route
         path="*"
         element={<Navigate to={user ? '/dashboard' : '/'} />}
+        
       />
     </Routes>
   )
