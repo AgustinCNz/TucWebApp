@@ -1,26 +1,30 @@
+// backend/index.js
 import express from 'express'
 import cors from 'cors'
-import contactoRoutes from './routes/contacto.routes.js'
 import dotenv from 'dotenv'
+import contactoRoutes from './routes/contacto.routes.js'
 import usuariosRoutes from './routes/usuarios.routes.js'
+import landingsRoutes from './routes/landings.routes.js'
+import { pool } from './config/db.js'
 
 
-pool.getConnection()
-  .then(() => console.log('✅ Conectado a MySQL correctamente'))
-  .catch(err => console.error('❌ Error de conexión MySQL:', err.message))
 dotenv.config()
 
 const app = express()
+
 app.use(cors())
 app.use(express.json())
 
 app.use('/api/contacto', contactoRoutes)
 app.use('/api/usuarios', usuariosRoutes)
-const PORT = process.env.PORT || 3000
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`)
-})
+app.use('/api/landings', landingsRoutes)
 
+// Prueba conexión MySQL
+pool.getConnection()
+  .then(() => console.log('✅ Conectado a MySQL correctamente'))
+  .catch(err => console.error('❌ Error de conexión MySQL:', err.message))
+
+// Endpoints extra
 app.post('/api/usuarios', async (req, res) => {
   const { uid, email } = req.body
   try {
@@ -31,6 +35,7 @@ app.post('/api/usuarios', async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' })
   }
 })
+
 app.get('/api/usuarios/:uid', async (req, res) => {
   const { uid } = req.params
   try {
@@ -44,3 +49,9 @@ app.get('/api/usuarios/:uid', async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' })
   }
 })
+
+const PORT = process.env.PORT || 3000
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`)
+})
+// Exportar la aplicación para pruebas

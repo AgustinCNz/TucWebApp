@@ -4,6 +4,7 @@ import { auth } from './lib/firebase'
 import { useAuthStore } from './store/useAuthStore'
 import Login from './pages/Login'
 import Home from './pages/Home'
+import MisLandings from './components/MisLandings'
 
 function App() {
   const { user, setUser, clearUser } = useAuthStore()
@@ -23,7 +24,14 @@ function App() {
   if (!user) return <Login />
 
   // Si está logueado, mostrar landing o panel
-  return <Home />
+  return (
+    <>
+      <Home />
+      <MisLandings />
+    </>
+  )
+
+  // Puedes agregar más rutas o componentes aquí según tu aplicación
 }
 
 export default App
