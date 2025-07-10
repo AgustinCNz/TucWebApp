@@ -6,7 +6,6 @@
 import { Route, Routes, Navigate } from 'react-router-dom'
 import { useAuthStore } from './store/useAuthStore'         // Zustand para auth state
 
-// Páginas públicas
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -35,6 +34,7 @@ function App () {
           <Route path='crear-landing' element={<CrearLanding />} />
         </Route>
       )}
+
 
       {/* ─────────────────── Redirección catch-all ─────────────────── */}
       <Route

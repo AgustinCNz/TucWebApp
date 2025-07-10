@@ -1,3 +1,4 @@
+
 // src/pages/dashboard/index.jsx
 // -----------------------------------------------------------------------------
 // Página raíz simple del dashboard (puede usarse como placeholder).

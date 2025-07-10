@@ -1,3 +1,4 @@
+
 // src/pages/dashboard/Dashboard.jsx
 // -----------------------------------------------------------------------------
 // Página de bienvenida dentro del panel.
@@ -36,6 +37,7 @@ export default function Dashboard () {
     </div>
   )
 }
+
 
 // Sugerencias comunes para dashboard
 
