@@ -48,6 +48,14 @@ export default function Landing() {
               <p className="text-xs text-gray-500">
                 Creada el {new Date(landing.fecha_creacion).toLocaleDateString()}
               </p>
+
+              
+              <Link
+                to={`/dashboard/landing/preview/${landing.id}`}
+                className="mt-2 inline-block bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm"
+              >
+                Vista previa
+              </Link>
             </div>
           ))}
         </div>

@@ -117,3 +117,21 @@ export const obtenerLandingPorId = async (id) => {
   if (!res.ok) throw new Error('Error al obtener landing por ID')
   return await res.json()
 }
+
+export const actualizarLanding = async (id, data) => {
+  const res = await fetch(`${API_URL}/landings/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  })
+  if (!res.ok) throw new Error('Error al actualizar landing')
+  return await res.json()
+}
+
+export async function eliminarLanding(id) {
+  const response = await fetch(`http://localhost:3000/api/landings/${id}`, {
+    method: 'DELETE',
+  })
+  if (!response.ok) throw new Error('Error al eliminar landing')
+  return await response.json()
+}

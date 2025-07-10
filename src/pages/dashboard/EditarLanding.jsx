@@ -1,80 +1,110 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { obtenerLandingPorId, actualizarLanding } from '../../services/api'
 
 export default function EditarLanding() {
-  const { landingId } = useParams()
+  const { id } = useParams()
   const navigate = useNavigate()
 
-  const [form, setForm] = useState({
+  const [formData, setFormData] = useState({
     titulo: '',
     subtitulo: '',
     descripcion: '',
-    whatsapp: '',
-    color_fondo: '#ffffff',
-    marca_agua: true,
+    color: '',
   })
 
-  const [mensaje, setMensaje] = useState("")
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
-    const cargarLanding = async () => {
+    const fetchLanding = async () => {
       try {
-        const data = await obtenerLandingPorId(landingId)
-        if (data) {
-          setForm(data)
-        } else {
-          setMensaje("No se encontró la landing solicitada")
-        }
-      } catch (error) {
-        console.error('Error al cargar landing:', error)
-        setMensaje("Error al cargar los datos")
+        const data = await obtenerLandingPorId(id)
+        setFormData(data)
+      } catch (err) {
+        setError('Error al cargar la landing')
+        console.error(err)
+      } finally {
+        setLoading(false)
       }
     }
 
-    cargarLanding()
-  }, [landingId])
+    fetchLanding()
+  }, [id])
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target
-    setForm({
-      ...form,
-      [name]: type === 'checkbox' ? checked : value,
-    })
+    const { name, value } = e.target
+    setFormData({ ...formData, [name]: value })
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setMensaje("")
-
     try {
-      await actualizarLanding(landingId, form)
-      setMensaje("Landing actualizada correctamente ✅")
-      setTimeout(() => navigate('/dashboard/landing'), 1500)
-    } catch (error) {
-      console.error('Error al actualizar:', error)
-      setMensaje("No se pudo actualizar la landing ❌")
+      await actualizarLanding(id, formData)
+      navigate('/dashboard/landing') // redirigir al listado
+    } catch (err) {
+      setError('Error al actualizar la landing')
+      console.error(err)
     }
   }
 
-  return (
-    <div className="max-w-2xl mx-auto mt-8">
-      <h2 className="text-2xl font-bold mb-6">Editar Landing</h2>
+  if (loading) return <p className="text-center mt-6">Cargando datos...</p>
+  if (error) return <p className="text-center text-red-600">{error}</p>
 
-      {mensaje && <p className="mb-4 text-blue-600 font-semibold">{mensaje}</p>}
+  return (
+    <div className="max-w-xl mx-auto mt-10 bg-white p-6 rounded shadow">
+      <h2 className="text-2xl font-bold mb-4">Editar Landing</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input type="text" name="titulo" placeholder="Título" value={form.titulo} onChange={handleChange} className="w-full p-2 border rounded" />
-        <input type="text" name="subtitulo" placeholder="Subtítulo" value={form.subtitulo} onChange={handleChange} className="w-full p-2 border rounded" />
-        <textarea name="descripcion" placeholder="Descripción" value={form.descripcion} onChange={handleChange} className="w-full p-2 border rounded" rows={4} />
-        <input type="text" name="whatsapp" placeholder="Número de WhatsApp" value={form.whatsapp} onChange={handleChange} className="w-full p-2 border rounded" />
-        <input type="color" name="color_fondo" value={form.color_fondo} onChange={handleChange} className="w-full p-2 border rounded" />
-        <label className="flex items-center gap-2">
-          <input type="checkbox" name="marca_agua" checked={form.marca_agua} onChange={handleChange} />
-          Mostrar marca de agua
-        </label>
+        <div>
+          <label className="block text-sm font-medium">Título</label>
+          <input
+            type="text"
+            name="titulo"
+            value={formData.titulo}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+            required
+          />
+        </div>
 
-        <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+        <div>
+          <label className="block text-sm font-medium">Subtítulo</label>
+          <input
+            type="text"
+            name="subtitulo"
+            value={formData.subtitulo}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium">Descripción</label>
+          <textarea
+            name="descripcion"
+            value={formData.descripcion}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+            rows="4"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium">Color principal</label>
+          <input
+            type="color"
+            name="color"
+            value={formData.color}
+            onChange={handleChange}
+            className="w-12 h-10 p-0 border rounded"
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
           Guardar cambios
         </button>
       </form>
