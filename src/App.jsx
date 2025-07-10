@@ -17,18 +17,13 @@ function App() {
       {/* Ruta pública inicial */}
       <Route path="/" element={<Home />} />
 
-      {/* Rutas públicas de autenticación */}
-      {!user && (
-        <>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </>
-      )}
+      {/* Rutas públicas siempre accesibles */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
 
       {/* Rutas privadas (requieren sesión) */}
       {user && (
         <Route path="/dashboard" element={<DashboardLayout />}>
-          
           <Route index element={<Dashboard />} />
           <Route path="landing" element={<Landing />} />
           <Route path="crear-landing" element={<CrearLanding />} />
@@ -36,11 +31,7 @@ function App() {
       )}
 
       {/* Redirección según sesión */}
-      <Route
-        path="*"
-        element={<Navigate to={user ? '/dashboard' : '/'} />}
-        
-      />
+      <Route path="*" element={<Navigate to={user ? '/dashboard' : '/'} />} />
     </Routes>
   )
 }

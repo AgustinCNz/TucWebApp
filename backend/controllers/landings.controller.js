@@ -3,6 +3,7 @@ import { crearLanding, obtenerLandingsPorUid } from '../models/landing.model.js'
 import { pool } from '../config/db.js'
 
 
+
 export async function handleCrearLanding(req, res) {
   try {
     const nuevaLanding = await crearLanding(req.body)

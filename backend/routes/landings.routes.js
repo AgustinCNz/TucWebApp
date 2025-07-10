@@ -1,7 +1,6 @@
 // backend/routes/landings.routes.js
 import express from 'express'
 import { handleCrearLanding, handleObtenerLandings } from '../controllers/landings.controller.js'
-import express from 'express'
 import { eliminarLanding } from '../../src/services/api.js'
 
 const router = express.Router()
