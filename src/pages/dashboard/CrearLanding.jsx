@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../store/useAuthStore'
 import { crearLanding } from '../../services/api'
+import { useNavigate } from 'react-router-dom'
 
 export default function CrearLanding() {
   const { user } = useAuthStore()
@@ -12,105 +12,60 @@ export default function CrearLanding() {
     subtitulo: '',
     descripcion: '',
     whatsapp: '',
+    email: '',
+    instagram: '',
+    facebook: '',
+    imagen_destacada: '',
     color_fondo: '#ffffff',
-    marca_agua: true,
   })
 
   const [mensaje, setMensaje] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target
-    setForm({
-      ...form,
-      [name]: type === 'checkbox' ? checked : value,
-    })
+    setForm({ ...form, [e.target.name]: e.target.value })
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setLoading(true)
     setMensaje('')
+    setError('')
 
     try {
-      await crearLanding(user.uid, form)
-      setMensaje('Landing creada con éxito ✅')
-      setTimeout(() => navigate('/dashboard/landing'), 1500)
-    } catch (error) {
-      console.error(error)
-      setMensaje('Error al crear la landing')
-    } finally {
-      setLoading(false)
+      await crearLanding({ uid: user.uid, ...form })
+      setMensaje('✅ Landing creada correctamente')
+      navigate('/dashboard/landing')
+    } catch (err) {
+      console.error(err)
+      setError('❌ Hubo un error al crear la landing')
     }
   }
 
   return (
-    <div className="max-w-xl mx-auto bg-white p-6 rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">Crear nueva Landing</h2>
+    <div className="max-w-2xl mx-auto mt-10">
+      <h2 className="text-3xl font-bold mb-4">Crear nueva landing</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          name="titulo"
-          placeholder="Título"
-          value={form.titulo}
-          onChange={handleChange}
-          className="w-full border px-4 py-2 rounded"
-          required
-        />
-        <input
-          type="text"
-          name="subtitulo"
-          placeholder="Subtítulo"
-          value={form.subtitulo}
-          onChange={handleChange}
-          className="w-full border px-4 py-2 rounded"
-        />
-        <textarea
-          name="descripcion"
-          placeholder="Descripción"
-          value={form.descripcion}
-          onChange={handleChange}
-          className="w-full border px-4 py-2 rounded"
-          rows={4}
-        />
-        <input
-          type="text"
-          name="whatsapp"
-          placeholder="Número de WhatsApp"
-          value={form.whatsapp}
-          onChange={handleChange}
-          className="w-full border px-4 py-2 rounded"
-        />
-        <label className="block">
-          Color de fondo:
-          <input
-            type="color"
-            name="color_fondo"
-            value={form.color_fondo}
-            onChange={handleChange}
-            className="ml-2"
-          />
-        </label>
-        <label className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            name="marca_agua"
-            checked={form.marca_agua}
-            onChange={handleChange}
-          />
-          <span>Mostrar marca de agua</span>
-        </label>
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 w-full"
-        >
-          {loading ? 'Creando...' : 'Crear Landing'}
+        <input name="titulo" value={form.titulo} onChange={handleChange} placeholder="Título" required className="w-full p-2 border rounded" />
+        <input name="subtitulo" value={form.subtitulo} onChange={handleChange} placeholder="Subtítulo" required className="w-full p-2 border rounded" />
+        <textarea name="descripcion" value={form.descripcion} onChange={handleChange} placeholder="Descripción" required className="w-full p-2 border rounded" />
+
+        <input name="whatsapp" value={form.whatsapp} onChange={handleChange} placeholder="Número de WhatsApp" className="w-full p-2 border rounded" />
+        <input name="email" value={form.email} onChange={handleChange} placeholder="Email de contacto" className="w-full p-2 border rounded" />
+        <input name="instagram" value={form.instagram} onChange={handleChange} placeholder="Instagram (URL)" className="w-full p-2 border rounded" />
+        <input name="facebook" value={form.facebook} onChange={handleChange} placeholder="Facebook (URL)" className="w-full p-2 border rounded" />
+        <input name="imagen_destacada" value={form.imagen_destacada} onChange={handleChange} placeholder="URL de imagen destacada" className="w-full p-2 border rounded" />
+        
+        <label className="block mt-4 font-semibold">Color de fondo:</label>
+        <input type="color" name="color_fondo" value={form.color_fondo} onChange={handleChange} className="w-16 h-10 rounded" />
+
+        <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+          Crear Landing
         </button>
       </form>
 
-      {mensaje && <p className="mt-4 text-center font-semibold">{mensaje}</p>}
+      {mensaje && <p className="text-green-600 mt-4">{mensaje}</p>}
+      {error && <p className="text-red-600 mt-4">{error}</p>}
     </div>
   )
 }

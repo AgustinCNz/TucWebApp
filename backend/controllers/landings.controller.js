@@ -1,5 +1,7 @@
 // backend/controllers/landings.controller.js
 import { crearLanding, obtenerLandingsPorUid } from '../models/landing.model.js'
+import { pool } from '../config/db.js'
+
 
 export async function handleCrearLanding(req, res) {
   try {
@@ -19,5 +21,21 @@ export async function handleObtenerLandings(req, res) {
   } catch (error) {
     console.error('Error al obtener landings:', error.message)
     res.status(500).json({ error: 'Error al obtener landings' })
+  }
+}
+
+export const eliminarLanding = async (req, res) => {
+  const { id } = req.params
+  try {
+    const [result] = await pool.query('DELETE FROM landings WHERE id = ?', [id])
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Landing no encontrada' })
+    }
+
+    res.json({ message: 'Landing eliminada correctamente' })
+  } catch (error) {
+    console.error('Error al eliminar landing:', error)
+    res.status(500).json({ error: 'Error al eliminar landing' })
   }
 }
