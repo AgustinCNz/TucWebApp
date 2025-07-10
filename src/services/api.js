@@ -1,137 +1,101 @@
-// api.js — Manejo centralizado de las llamadas al backend
+// src/services/api.js
+// -----------------------------------------------------------------------------
+// Módulo centralizado para llamadas HTTP al backend.
+// Usa Fetch API nativa; podés migrar a Axios o React Query para features extra.
+// -----------------------------------------------------------------------------
 
-const API_URL = 'http://localhost:3000/api' // luego esto puede ser dinámico según entorno
+const API_URL = 'http://localhost:3000/api' // TODO: parametrizar vía env
 
-
-
-// 📨 Enviar mensaje desde el formulario de contacto
-export const enviarContacto = async (data) => {
-  try {
-    const res = await fetch(`${API_URL}/contacto`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-
-    if (!res.ok) throw new Error('Error al enviar formulario')
-    return await res.json()
-  } catch (error) {
-    console.error('API error:', error.message)
-    throw error
+// Utilidad interna para manejar respuestas HTTP
+async function handleResponse (res) {
+  if (!res.ok) {
+    const errorText = await res.text()
+    throw new Error(errorText || 'Error en la solicitud')
   }
+  return res.json()
 }
 
-// 🆕 Registrar usuario en base de datos local al mismo tiempo que en Firebase
-export const registrarUsuarioDB = async ({ uid, email, plan = 'free' }) => {
-  try {
-    const res = await fetch(`${API_URL}/usuarios`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ uid, email, plan }),
-    })
-
-    if (!res.ok) throw new Error('Error al registrar usuario en DB')
-    return await res.json()
-  } catch (error) {
-    console.error('API error (registro usuario):', error.message)
-    throw error
-  }
-}
-// 🆕 Obtener datos del usuario por UID
-
-
-// Obtener datos del usuario desde la base de datos local
-export const obtenerUsuario = async (uid) => {
-  try {
-    const res = await fetch(`${API_URL}/usuarios/${uid}`)
-    if (!res.ok) throw new Error('Error al obtener usuario')
-    return await res.json()
-  } catch (error) {
-    console.error('API error:', error.message)
-    throw error
-  }
-}
-// 🆕 Actualizar datos del usuario en la base de datos loca  l
-
-export const enviarUsuario = async (data) => {
-  try {
-    const res = await fetch(`${API_URL}/usuarios`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-
-    if (!res.ok) throw new Error('No se pudo guardar el usuario')
-    return await res.json()
-  } catch (error) {
-    console.error('Error al enviar usuario:', error)
-    throw error
-  }
-}
-// 🆕 Actualizar datos del usuario en la base de datos local
-export const actualizarUsuario = async (uid, data) => {
-  try {
-    const res = await fetch(`${API_URL}/usuarios/${uid}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-
-    if (!res.ok) throw new Error('No se pudo actualizar el usuario')
-    return await res.json()
-  } catch (error) {
-    console.error('Error al actualizar usuario:', error)
-    throw error
-  }
-}
-
-// 🆕 Crear una nueva landing page
-export async function crearLanding(data) {
-  const response = await fetch('http://localhost:3000/api/landings', {
+// ──────────────────────────────────────────────────────────────────────────────
+// Contacto
+// ──────────────────────────────────────────────────────────────────────────────
+export async function enviarContacto (data) {
+  const res = await fetch(`${API_URL}/contacto`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
+    body: JSON.stringify(data)
   })
-  if (!response.ok) throw new Error('Error al crear landing')
-  return await response.json()
+  return handleResponse(res)
 }
 
-export async function obtenerLandings(uid) {
-  const response = await fetch(`http://localhost:3000/api/landings/${uid}`)
-  if (!response.ok) throw new Error('Error al obtener landings')
-  return await response.json()
+// ──────────────────────────────────────────────────────────────────────────────
+// Usuarios
+// ──────────────────────────────────────────────────────────────────────────────
+export async function registrarUsuarioDB ({ uid, email, plan = 'free' }) {
+  const res = await fetch(`${API_URL}/usuarios`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ uid, email, plan })
+  })
+  return handleResponse(res)
 }
 
-const API = 'http://localhost:3000/api'
+export async function obtenerUsuario (uid) {
+  const res = await fetch(`${API_URL}/usuarios/${uid}`)
+  return handleResponse(res)
+}
 
-export const obtenerLandingPorId = async (id) => {
+export async function actualizarUsuario (uid, data) {
+  const res = await fetch(`${API_URL}/usuarios/${uid}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  return handleResponse(res)
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Landings
+// ──────────────────────────────────────────────────────────────────────────────
+export async function crearLanding (data) {
+  const res = await fetch(`${API_URL}/landings`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  return handleResponse(res)
+}
+
+export async function obtenerLandings (uid) {
+  const res = await fetch(`${API_URL}/landings/${uid}`)
+  return handleResponse(res)
+}
+
+export async function obtenerLandingPorId (id) {
   const res = await fetch(`${API_URL}/landings/${id}`)
-  if (!res.ok) throw new Error('Error al obtener landing por ID')
-  return await res.json()
+  return handleResponse(res)
 }
 
-export const actualizarLanding = async (id, data) => {
+export async function actualizarLanding (id, data) {
   const res = await fetch(`${API_URL}/landings/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
+    body: JSON.stringify(data)
   })
-  if (!res.ok) throw new Error('Error al actualizar landing')
-  return await res.json()
+  return handleResponse(res)
 }
 
-export async function eliminarLanding(id) {
-  const response = await fetch(`http://localhost:3000/api/landings/${id}`, {
-    method: 'DELETE',
-  })
-  if (!response.ok) throw new Error('Error al eliminar landing')
-  return await response.json()
+export async function eliminarLanding (id) {
+  const res = await fetch(`${API_URL}/landings/${id}`, { method: 'DELETE' })
+  return handleResponse(res)
 }
+
+
+// Sugerencias
+
+// DRY: extrae fetch a una función request(method, endpoint, body).
+
+// Env vars: import.meta.env.VITE_API_URL para producción/dev.
+
+// Integra React Query para caching, retries y estados isLoading.
+
+// Manejá expiración de sesión (401) redireccionando al login de forma global.

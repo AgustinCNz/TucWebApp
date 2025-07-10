@@ -1,39 +1,46 @@
+// src/AppLayout.jsx
+// -----------------------------------------------------------------------------
+// Alternativa a App.jsx: gestiona auth con Firebase directamente.
+// Se dejó para referencia pero NO se usa si ya tenés App.jsx + rutas.
+// -----------------------------------------------------------------------------
+
 import { useEffect } from 'react'
 import { onAuthStateChanged } from 'firebase/auth'
-import { auth } from './lib/firebase'
+import { auth } from './lib/firebase'            // Config de Firebase
 import { useAuthStore } from './store/useAuthStore'
+
 import Login from './pages/Login'
 import Home from './pages/Home'
 import MisLandings from './components/MisLandings'
 
-function App() {
+function AppLayout () {
   const { user, setUser, clearUser } = useAuthStore()
 
+  // Suscripción a cambios de sesión Firebase
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      if (firebaseUser) {
-        setUser(firebaseUser)
-      } else {
-        clearUser()
-      }
+    const unsubscribe = onAuthStateChanged(auth, firebaseUser => {
+      firebaseUser ? setUser(firebaseUser) : clearUser()
     })
-    return () => unsubscribe()
+    return () => unsubscribe()                  // Limpiamos listener al desmontar
   }, [setUser, clearUser])
 
-  // Mostrar login si no está logueado
-  if (!user) return <Login />
+  // ─────────────────── Render condicional ───────────────────
+  if (!user) return <Login />                   // Sin sesión → Login
 
-  // Si está logueado, mostrar landing o panel
   return (
     <>
-      <Home />
-      <MisLandings />
+      <Home />                                 {/* Sección pública */}
+      <MisLandings />                          {/* Listado interno */}
+      {/* Agregá más componentes o rutas aquí si lo necesitás */}
     </>
   )
-
-  // Puedes agregar más rutas o componentes aquí según tu aplicación
 }
 
-export default App
-// Este componente App maneja la autenticación del usuario utilizando Firebase.
-// Utiliza Zustand para almacenar el estado del usuario y muestra la página de login si no está logueado.
+export default AppLayout
+// Nota: Asegurate de no tener dos componentes <App> exportados en el proyecto.
+
+// Sugerencias
+
+// Renombrá este archivo o eliminá su export duplicado para evitar colisión con App.jsx.
+
+// Podrías integrar esta lógica en un contexto de autenticación global.

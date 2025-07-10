@@ -1,3 +1,7 @@
+/* src/App.css
+   ---------------------------------------------------------------------------
+   Estilos de la plantilla Vite + React. Podés eliminar si migrás todo a Tailwind.
+   --------------------------------------------------------------------------- */
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -5,6 +9,7 @@
   text-align: center;
 }
 
+/* ─────────────── Animación del logo (demo) ─────────────── */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -19,12 +24,8 @@
 }
 
 @keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -33,10 +34,11 @@
   }
 }
 
-.card {
-  padding: 2em;
-}
+.card { padding: 2em; }
+.read-the-docs { color: #888; }
+/* 
+Sugerencias
 
-.read-the-docs {
-  color: #888;
-}
+Si usás Tailwind al 100 %, podés borrar este archivo y referencias a .logo.
+
+Convertí valores fijos (max-width, padding) a clases Tailwind (max-w-5xl, p-8). */
