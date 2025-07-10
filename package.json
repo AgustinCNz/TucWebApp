@@ -1,14 +1,20 @@
 {
   "name": "tucwebapp",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "Front-end de TucWeb: creador de landings auto-administrables",
   "type": "module",
+  "engines": { "node": ">=18" },
+
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview --port 5000",
+    "lint": "eslint . --ext .js,.jsx",
+    "format": "prettier --write .",
+    "check": "npm run lint"
   },
+
   "dependencies": {
     "firebase": "^11.10.0",
     "react": "^19.1.0",
@@ -17,18 +23,22 @@
     "react-router-dom": "^7.6.3",
     "zustand": "^5.0.6"
   },
+
   "devDependencies": {
-    "@eslint/js": "^9.29.0",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.5.2",
-    "autoprefixer": "^10.4.19",
+    "@eslint/js": "^9.29.0",
     "eslint": "^9.29.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
-    "globals": "^16.2.0",
-    "postcss": "^8.4.38",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "prettier": "^3.3.1",
     "tailwindcss": "^3.4.1",
+    "postcss": "^8.4.38",
+    "autoprefixer": "^10.4.19",
+    "globals": "^16.2.0",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
     "vite": "^7.0.0"
   }
 }

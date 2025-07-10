@@ -1,3 +1,14 @@
+/* src/index.css
+   ---------------------------------------------------------------------------
+   Importa Tailwind mediante la directiva @tailwind.
+   Agregá utilidades personalizadas debajo si hace falta.
+   --------------------------------------------------------------------------- */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Ejemplo de componente personalizado:
+.btn-primary {
+  @apply bg-blue-600 text-white py-2 px-4 rounded-lg;
+}
+*/

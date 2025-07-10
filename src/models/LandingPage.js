@@ -1,7 +1,12 @@
-export class LandingPage {
-  #tipo = 'base'
+// src/models/LandingPage.js
+// -----------------------------------------------------------------------------
+// Clase base (Abstract) para representar una Landing genérica.
+// -----------------------------------------------------------------------------
 
-  constructor({ id, nombre, colorFondo = '#ffffff', textos = [], usuarioUid }) {
+export class LandingPage {
+  #tipo = 'base' // Campo privado: identifica subtipo
+
+  constructor ({ id, nombre, colorFondo = '#ffffff', textos = [], usuarioUid }) {
     this.id = id
     this.nombre = nombre
     this.colorFondo = colorFondo
@@ -9,15 +14,18 @@ export class LandingPage {
     this.usuarioUid = usuarioUid
   }
 
-  getTipo() {
+  // Getter de tipo (subclases pueden sobreescribir #tipo)
+  getTipo () {
     return this.#tipo
   }
 
-  agregarTexto(nuevoTexto) {
+  // Agrega un texto al array
+  agregarTexto (nuevoTexto) {
     this.textos.push(nuevoTexto)
   }
 
-  toJSON() {
+  // Convierte a JSON serializable para API / Storage
+  toJSON () {
     return {
       id: this.id,
       nombre: this.nombre,
@@ -28,3 +36,7 @@ export class LandingPage {
     }
   }
 }
+
+// Sugerencias para ambos modelos
+
+// Considerá validar longitud/formato en setters (ej. colorFondo HEX).

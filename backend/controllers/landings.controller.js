@@ -1,19 +1,32 @@
 // backend/controllers/landings.controller.js
-import { crearLanding, obtenerLandingsPorUid } from '../models/landing.model.js'
-import { pool } from '../config/db.js'
+// -----------------------------------------------------------------------------
+// Controladores para CRUD de landings.
+// -----------------------------------------------------------------------------
 
+import {
+  crearLanding,
+  obtenerLandingsPorUid
+} from '../models/landing.model.js'
 
+import { pool } from '../config/db.js' // Sólo necesario para eliminarLanding
 
+// ──────────────────────────────────────────────────────────────────────────────
+// Crear landing
+// ──────────────────────────────────────────────────────────────────────────────
 export async function handleCrearLanding(req, res) {
   try {
-    const nuevaLanding = await crearLanding(req.body)
-    res.status(201).json({ id: nuevaLanding })
+    // crearLanding devuelve el ID insertado
+    const nuevaLandingId = await crearLanding(req.body)
+    res.status(201).json({ id: nuevaLandingId })
   } catch (error) {
     console.error('Error al crear landing:', error.message)
     res.status(500).json({ error: 'Error al crear landing' })
   }
 }
 
+// ──────────────────────────────────────────────────────────────────────────────
+// Obtener landings por UID
+// ──────────────────────────────────────────────────────────────────────────────
 export async function handleObtenerLandings(req, res) {
   try {
     const { uid } = req.params
@@ -25,11 +38,19 @@ export async function handleObtenerLandings(req, res) {
   }
 }
 
+// ──────────────────────────────────────────────────────────────────────────────
+// Eliminar landing por ID
+// ──────────────────────────────────────────────────────────────────────────────
 export const eliminarLanding = async (req, res) => {
   const { id } = req.params
   try {
-    const [result] = await pool.query('DELETE FROM landings WHERE id = ?', [id])
+    // Ejecutamos DELETE parametrizado
+    const [result] = await pool.query(
+      'DELETE FROM landings WHERE id = ?',
+      [id]
+    )
 
+    // Si no afectó filas, la landing no existe
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Landing no encontrada' })
     }
@@ -40,3 +61,14 @@ export const eliminarLanding = async (req, res) => {
     res.status(500).json({ error: 'Error al eliminar landing' })
   }
 }
+
+// Sugerencias
+
+// Autenticación/Autorización: verificar que el uid de la sesión
+// coincida con el propietario de la landing antes de eliminar.
+
+// Transacciones: si eliminás registros relacionados (imágenes, stats),
+// usá BEGIN/COMMIT/ROLLBACK.
+
+// Mover eliminarLanding: ya está aquí, así que eliminá el import
+// erróneo desde el front-end en routes/landings.routes.js.

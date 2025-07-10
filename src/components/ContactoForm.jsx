@@ -1,84 +1,103 @@
-// Formulario de contacto que después conectaremos al backend
-import { useState } from "react"
-import {enviarContacto} from "../services/api" // Asegúrate de crear este servicio
+// src/components/ContactoForm.jsx
+// -----------------------------------------------------------------------------
+// Formulario de contacto: envía datos al backend y muestra feedback al usuario.
+// -----------------------------------------------------------------------------
 
-export default function ContactoForm() {
+import { useState } from 'react'
+import { enviarContacto } from '../services/api' // Servicio HTTP (POST /api/contacto)
+
+export default function ContactoForm () {
+  // Estado local controlado para cada campo
   const [form, setForm] = useState({
-    nombre: "",
-    email: "",
-    whatsapp: "",
-    mensaje: "",
+    nombre: '',
+    email: '',
+    whatsapp: '',
+    mensaje: ''
   })
 
-  const handleChange = (e) => {
+  // Handler genérico → actualiza por name
+  const handleChange = e =>
     setForm({ ...form, [e.target.name]: e.target.value })
-  }
 
-  const handleSubmit = async (e) => {
+  // Envío del formulario
+  const handleSubmit = async e => {
     e.preventDefault()
     try {
-      await enviarContacto(form)
-      alert("Mensaje enviado correctamente.")
-      setForm({ nombre: "", email: "", whatsapp: "", mensaje: "" }) // Limpiar el formulario
+      await enviarContacto(form)                 // Petición al backend
+      alert('Mensaje enviado correctamente.')
+      // Reseteamos campos
+      setForm({ nombre: '', email: '', whatsapp: '', mensaje: '' })
     } catch (error) {
-      console.error("Error al enviar el mensaje:", error)
-      alert("Hubo un error al enviar el mensaje.")
+      console.error('Error al enviar el mensaje:', error)
+      alert('Hubo un error al enviar el mensaje.')
     }
   }
 
   return (
-    <section className="bg-gray-900 text-white py-16 px-5" id="contacto">
-      <div className="max-w-3xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-10">¿Querés tu landing?</h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
+    <section className='bg-gray-900 text-white py-16 px-5' id='contacto'>
+      <div className='max-w-3xl mx-auto'>
+        <h2 className='text-3xl md:text-4xl font-bold text-center mb-10'>
+          ¿Querés tu landing?
+        </h2>
+
+        <form onSubmit={handleSubmit} className='space-y-6'>
+          {/* Nombre */}
           <div>
-            <label className="block mb-1">Nombre</label>
+            <label className='block mb-1'>Nombre</label>
             <input
-              type="text"
-              name="nombre"
+              type='text'
+              name='nombre'
               value={form.nombre}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-md text-black"
+              className='w-full px-4 py-2 rounded-md text-black'
               required
             />
           </div>
+
+          {/* Email */}
           <div>
-            <label className="block mb-1">Email</label>
+            <label className='block mb-1'>Email</label>
             <input
-              type="email"
-              name="email"
+              type='email'
+              name='email'
               value={form.email}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-md text-black"
+              className='w-full px-4 py-2 rounded-md text-black'
               required
             />
           </div>
+
+          {/* WhatsApp */}
           <div>
-            <label className="block mb-1">WhatsApp</label>
+            <label className='block mb-1'>WhatsApp</label>
             <input
-              type="text"
-              name="whatsapp"
+              type='text'
+              name='whatsapp'
               value={form.whatsapp}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-md text-black"
+              className='w-full px-4 py-2 rounded-md text-black'
               required
             />
           </div>
+
+          {/* Mensaje */}
           <div>
-            <label className="block mb-1">Mensaje</label>
+            <label className='block mb-1'>Mensaje</label>
             <textarea
-              name="mensaje"
+              name='mensaje'
               value={form.mensaje}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-md text-black"
-              rows="4"
+              className='w-full px-4 py-2 rounded-md text-black'
+              rows='4'
               required
             ></textarea>
           </div>
-          <div className="text-center">
+
+          {/* Botón enviar */}
+          <div className='text-center'>
             <button
-              type="submit"
-              className="bg-white text-black px-6 py-3 rounded-xl font-semibold hover:bg-gray-300 transition"
+              type='submit'
+              className='bg-white text-black px-6 py-3 rounded-xl font-semibold hover:bg-gray-300 transition'
             >
               Enviar mensaje
             </button>
@@ -88,3 +107,9 @@ export default function ContactoForm() {
     </section>
   )
 }
+
+/* ──────────────────────── Sugerencias ────────────────────────
+1. Validá formato de WhatsApp (regex) y limita caracteres de mensaje.
+2. Reemplazá alert() por toast (ej. react-hot-toast) para UX moderna.
+3. Deshabilitá el botón mientras se envía → estado loading.
+-----------------------------------------------------------------*/

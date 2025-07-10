@@ -1,20 +1,35 @@
 {
   "name": "backend",
   "version": "1.0.0",
+  "description": "Proyecto TucWeb Backend",
   "main": "index.js",
   "type": "module",
+  "private": true,
   "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "lint": "eslint . --ext .js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "AgustinCNz",
   "license": "ISC",
-  "description": "",
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.0.1",
     "express": "^5.1.0",
     "firebase": "^11.10.0",
     "mysql2": "^3.14.1"
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^16.0.2",
+    "eslint-plugin-promise": "^6.1.1",
+    "nodemon": "^3.1.0"
   }
 }
