@@ -12,8 +12,10 @@ export const useServiceStore = create((set) => ({
   },
 
   add: async (payload) => {
-    const { id } = await api.create(payload)
-    set((s) => ({ list: [...s.list, { id, ...payload }] }))
+    await api.create(payload)
+    const uid = payload.uid_owner || window.localStorage.getItem('uid_owner')
+    const rows = await api.getAll(uid)
+    set({ list: rows })
   },
 
   update: async (id, payload) => {

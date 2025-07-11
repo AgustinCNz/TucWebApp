@@ -10,7 +10,7 @@ export default function ClientsPage() {
 
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState({ nombre: "", email: "", telefono: "" });
+  const [form, setForm] = useState({ nombre: "", email: "", telefono: "", nota: '', domicilio: '', ciudad: '' });
 
   /* ───────── fetch una sola vez ───────── */
   useEffect(() => {
@@ -31,14 +31,14 @@ export default function ClientsPage() {
   };
 
   const reset = () => {
-    setForm({ nombre: "", email: "", telefono: "" });
+    setForm({ nombre: "", email: "", telefono: "", nota: '', domicilio: '', ciudad: '' });
     setEditing(null);
     setOpen(false);
   };
 
   const handleEdit = (client) => {
     setEditing(client);
-    setForm({ nombre: client.nombre, email: client.email, telefono: client.telefono });
+    setForm({ nombre: client.nombre, email: client.email, telefono: client.telefono, nota: client.nota, domicilio: client.domicilio, ciudad: client.ciudad });
     setOpen(true);
   };
 
@@ -57,6 +57,9 @@ export default function ClientsPage() {
               <th className="px-4 py-2">Nombre</th>
               <th className="px-4 py-2">Email</th>
               <th className="px-4 py-2">Teléfono</th>
+              <th className="px-4 py-2">Nota</th>
+              <th className="px-4 py-2">Domicilio</th>
+              <th className="px-4 py-2">Ciudad</th>
               <th className="px-4 py-2 w-32">Acciones</th>
             </tr>
           </thead>
@@ -66,6 +69,9 @@ export default function ClientsPage() {
                 <td className="px-4 py-2">{c.nombre}</td>
                 <td className="px-4 py-2">{c.email}</td>
                 <td className="px-4 py-2">{c.telefono}</td>
+                <td className="px-4 py-2">{c.nota}</td>
+                <td className="px-4 py-2">{c.domicilio}</td>
+                <td className="px-4 py-2">{c.ciudad}</td>
                 <td className="px-4 py-2 flex gap-2">
                   <Button size="sm" onClick={() => handleEdit(c)}>
                     Editar
@@ -87,6 +93,8 @@ export default function ClientsPage() {
             { name: "nombre", label: "Nombre" },
             { name: "email", label: "Email" },
             { name: "telefono", label: "Teléfono" },
+            { name: "domicilio", label: "Domicilio" },
+            { name: "ciudad", label: "Ciudad" },
           ].map(({ name, label }) => (
             <div key={name}>
               <label className="block mb-1 text-sm font-medium">{label}</label>
@@ -100,7 +108,14 @@ export default function ClientsPage() {
               />
             </div>
           ))}
-
+          <textarea
+              name="nota"
+              placeholder="Nota"
+              value={form.nota || ''}
+              onChange={(e) => setForm({ ...form, nota: e.target.value })}
+              rows="3"
+              className="w-full border rounded px-3 py-2"
+            ></textarea>
           <div className="flex justify-end gap-4">
             <Button type="button" variant="ghost" onClick={reset}>
               Cancelar
