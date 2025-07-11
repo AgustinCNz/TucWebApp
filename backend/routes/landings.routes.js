@@ -1,42 +1,21 @@
 // backend/routes/landings.routes.js
 // -----------------------------------------------------------------------------
-// Rutas para crear, obtener y eliminar landing pages.
+// Rutas CRUD de landings.
 // -----------------------------------------------------------------------------
 
 import express from 'express'
 import {
-  handleCrearLanding,
-  handleObtenerLandings
+  handleCrearLanding,        // POST    /api/landings
+  handleObtenerLandings,     // GET     /api/landings/:uid
+  handleActualizarLanding,   // PUT     /api/landings/:id
+  eliminarLanding            // DELETE  /api/landings/:id
 } from '../controllers/landings.controller.js'
-
-// ⚠️ Importar lógica de eliminación desde el BACKEND, no desde el front-end.
-// El import actual apunta a src/services/api.js (código del cliente),
-// lo cual rompe la separación de capas.
-import { eliminarLanding } from '../../src/services/api.js'
 
 const router = express.Router()
 
-// POST /api/landings
-// Crea una nueva landing.
-router.post('/', handleCrearLanding)
+router.post('/', handleCrearLanding)          // Crear
+router.get('/:uid', handleObtenerLandings)    // Listar por UID
+router.put('/:id', handleActualizarLanding)   // Actualizar por ID
+router.delete('/:id', eliminarLanding)        // Eliminar por ID
 
-// GET /api/landings/:uid
-// Devuelve todas las landings de un usuario (por uid de Firebase).
-router.get('/:uid', handleObtenerLandings)
-
-// DELETE /api/landings/:id
-// Elimina una landing por ID.
-router.delete('/:id', eliminarLanding)
-
-export default router
-
-
-// Sugerencias
-
-// Separación de capas: eliminarLanding debería venir de
-// ../controllers/landings.controller.js o un controlador dedicado.
-// El front-end jamás debe ser requerido dentro del servidor.
-
-// Añadí middlewares de autenticación/autoriza­ción antes de operaciones sensibles.
-
-// Validar id y uid con un schema para evitar SQL Injection o datos corruptos.
+export default router   // 👈  ESTE ES EL EXPORT QUE INDEX.JS NECESITA

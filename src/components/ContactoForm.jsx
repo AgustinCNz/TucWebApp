@@ -4,7 +4,7 @@
 // -----------------------------------------------------------------------------
 
 import { useState } from 'react'
-import { enviarContacto } from '../services/api' // Servicio HTTP (POST /api/contacto)
+import { enviarContacto } from '../services/api.js' // Servicio HTTP (POST /api/contacto)
 
 export default function ContactoForm () {
   // Estado local controlado para cada campo

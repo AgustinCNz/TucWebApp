@@ -7,6 +7,7 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "react-colorful/dist/index.css";
 /* Ejemplo de componente personalizado:
 .btn-primary {
   @apply bg-blue-600 text-white py-2 px-4 rounded-lg;

@@ -34,11 +34,12 @@ export default function Landing () {
       <h2 className='text-2xl font-bold mb-4'>Mis Landings</h2>
 
       <Link
-        to='/crear-landing'
-        className='inline-block mb-4 bg-black text-white px-4 py-2 rounded'
-      >
-        + Crear nueva landing
-      </Link>
+          to='../crear-landing'
+          className='inline-block mb-4 bg-black text-white px-4 py-2 rounded'
+        >
+          + Crear nueva landing
+        </Link>
+      
 
       {loading ? (
         <p>Cargando...</p>
@@ -61,6 +62,12 @@ export default function Landing () {
               >
                 Vista previa
               </Link>
+              <Link
+                  to={`/dashboard/landing/editar-visual/${landing.id}`}
+                  className="mt-2 inline-block bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700 text-sm"
+                >
+                  Editor visual
+                </Link>
             </div>
           ))}
         </div>

@@ -1,23 +1,20 @@
 // src/services/api.js
 // -----------------------------------------------------------------------------
-// Módulo centralizado para llamadas HTTP al backend.
-// Usa Fetch API nativa; podés migrar a Axios o React Query para features extra.
+// Módulo centralizado de llamadas HTTP desde el front-end al backend.
 // -----------------------------------------------------------------------------
 
-const API_URL = 'http://localhost:3000/api' // TODO: parametrizar vía env
+const API_URL = 'http://localhost:3000/api'   // Cambiá en producción
 
-// Utilidad interna para manejar respuestas HTTP
+/* Utilidad: maneja respuestas HTTP */
 async function handleResponse (res) {
   if (!res.ok) {
-    const errorText = await res.text()
-    throw new Error(errorText || 'Error en la solicitud')
+    const text = await res.text()
+    throw new Error(text || 'Error en la solicitud')
   }
   return res.json()
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
-// Contacto
-// ──────────────────────────────────────────────────────────────────────────────
+/* ──────────────── CONTACTO ──────────────── */
 export async function enviarContacto (data) {
   const res = await fetch(`${API_URL}/contacto`, {
     method: 'POST',
@@ -27,9 +24,7 @@ export async function enviarContacto (data) {
   return handleResponse(res)
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
-// Usuarios
-// ──────────────────────────────────────────────────────────────────────────────
+/* ──────────────── USUARIOS ──────────────── */
 export async function registrarUsuarioDB ({ uid, email, plan = 'free' }) {
   const res = await fetch(`${API_URL}/usuarios`, {
     method: 'POST',
@@ -53,9 +48,7 @@ export async function actualizarUsuario (uid, data) {
   return handleResponse(res)
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
-// Landings
-// ──────────────────────────────────────────────────────────────────────────────
+/* ──────────────── LANDINGS ──────────────── */
 export async function crearLanding (data) {
   const res = await fetch(`${API_URL}/landings`, {
     method: 'POST',
@@ -88,14 +81,3 @@ export async function eliminarLanding (id) {
   const res = await fetch(`${API_URL}/landings/${id}`, { method: 'DELETE' })
   return handleResponse(res)
 }
-
-
-// Sugerencias
-
-// DRY: extrae fetch a una función request(method, endpoint, body).
-
-// Env vars: import.meta.env.VITE_API_URL para producción/dev.
-
-// Integra React Query para caching, retries y estados isLoading.
-
-// Manejá expiración de sesión (401) redireccionando al login de forma global.

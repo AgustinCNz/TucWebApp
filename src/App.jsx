@@ -3,6 +3,7 @@
 // Define las rutas principales de la SPA utilizando React Router.
 // -----------------------------------------------------------------------------
 
+
 import { Route, Routes, Navigate } from 'react-router-dom'
 import { useAuthStore } from './store/useAuthStore'         // Zustand para auth state
 
@@ -15,6 +16,7 @@ import DashboardLayout from './layouts/DashboardLayout'
 import Dashboard from './pages/dashboard/index'
 import Landing from './pages/dashboard/Landing'
 import CrearLanding from './pages/dashboard/CrearLanding'
+import EditorVisualLanding from './pages/dashboard/EditorVisualLanding'
 
 function App () {
   const { user } = useAuthStore()                           // user === null → no logueado
@@ -28,10 +30,12 @@ function App () {
 
       {/* ─────────────────── Rutas privadas ─────────────────── */}
       {user && (
+        
         <Route path='/dashboard' element={<DashboardLayout />}>
           <Route index element={<Dashboard />} />            {/* /dashboard */}
           <Route path='landing' element={<Landing />} />     {/* /dashboard/landing */}
           <Route path='crear-landing' element={<CrearLanding />} />
+          <Route path="landing/editar-visual/:id" element={<EditorVisualLanding />} />
         </Route>
       )}
 
