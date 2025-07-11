@@ -19,6 +19,10 @@ import contactoRoutes from './routes/contacto.routes.js'   // Formulario de cont
 import usuariosRoutes from './routes/usuarios.routes.js'   // Gestión de usuarios
 import landingsRoutes from './routes/landings.routes.js'   // CRUD de landing pages
 
+// Importar rutas de módulos específicos (ej. clientes, servicios, etc.)
+import clientRoutes from './modules/clients/client.routes.js'
+
+
 // ──────────────────────────────────────────────────────────────────────────────
 // ► 3. Configuración de base de datos (MySQL pool)
 // ──────────────────────────────────────────────────────────────────────────────
@@ -44,7 +48,7 @@ app.use(express.json())  // Parsea JSON del body a req.body
 app.use('/api/contacto', contactoRoutes)   // → /api/contacto/*
 app.use('/api/usuarios', usuariosRoutes)   // → /api/usuarios/*
 app.use('/api/landings', landingsRoutes)   // → /api/landings/*
-
+app.use('/api/clients', clientRoutes) // → /api/clients/*
 // ──────────────────────────────────────────────────────────────────────────────
 // ► 7. Verificación de conexión a MySQL (al arrancar)
 // ──────────────────────────────────────────────────────────────────────────────

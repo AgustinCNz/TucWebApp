@@ -12,7 +12,7 @@ import {
 // ⚠️ Importar lógica de eliminación desde el BACKEND, no desde el front-end.
 // El import actual apunta a src/services/api.js (código del cliente),
 // lo cual rompe la separación de capas.
-import { eliminarLanding } from '../../src/services/api.js'
+import { eliminarLanding } from '../../../src/services/api.js'
 
 const router = express.Router()
 
