@@ -23,6 +23,7 @@ import landingsRoutes from './routes/landings.routes.js'   // CRUD de landing pa
 import clientRoutes from './modules/clients/client.routes.js'
 import serviceRoutes from './modules/services/service.routes.js'
 import financeRoutes from './modules/finances/finance.routes.js'
+import importRoutes from './modules/imports/import.routes.js'
 
 // ──────────────────────────────────────────────────────────────────────────────
 // ► 3. Configuración de base de datos (MySQL pool)
@@ -52,6 +53,7 @@ app.use('/api/landings', landingsRoutes)   // → /api/landings/*
 app.use('/api/clients', clientRoutes) // → /api/clients/*
 app.use('/api/services', serviceRoutes) // → /api/services/*
 app.use('/api/finances', financeRoutes) // → /api/finances/*
+app.use('/api/imports', importRoutes) // → /api/imports/*
 // ──────────────────────────────────────────────────────────────────────────────
 // ► 7. Verificación de conexión a MySQL (al arrancar)
 // ──────────────────────────────────────────────────────────────────────────────

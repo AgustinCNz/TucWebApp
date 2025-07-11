@@ -10,6 +10,7 @@ import Dashboard from '@/pages/dashboard/Dashboard'
 import ClientesPage from '@/pages/dashboard/clientes'
 import ServiciosPage from '@/pages/dashboard/servicios'
 import FinanzasPage from '@/pages/dashboard/finanzas'
+import ImportacionesPage from '@/pages/dashboard/importaciones'
 
 function App () {
   const { user } = useAuthStore()
@@ -28,6 +29,8 @@ function App () {
           <Route path="clientes" element={<ClientesPage />} />
           <Route path="servicios" element={<ServiciosPage />} />
           <Route path='finanzas' element={<FinanzasPage />} />
+          <Route path='importaciones' element={<ImportacionesPage />} />
+          
           {/* Agregarás más rutas aquí cuando los demás módulos estén listos */}
         </Route>
       )}
