@@ -1,31 +1,30 @@
-// src/store/useClientStore.js
 import { create } from 'zustand'
-import * as api from '@/api/Servicio'      // tus llamadas fetch
+import * as api from '@/api/services'
 
-export const useClientStore = create((set) => ({
+export const useServiceStore = create((set) => ({
   list: [],
   loading: false,
 
-  fetchAll: async (ownerUid) => {
+  fetchAll: async (uid) => {
     set({ loading: true })
-    const data = await api.getAll(ownerUid)
-    set({ list: data, loading: false })
+    const rows = await api.getAll(uid)
+    set({ list: rows, loading: false })
   },
 
   add: async (payload) => {
-    const nuevo = await api.create(payload)
-    set((s) => ({ list: [...s.list, nuevo] }))
+    const { id } = await api.create(payload)
+    set((s) => ({ list: [...s.list, { id, ...payload }] }))
   },
 
   update: async (id, payload) => {
     await api.update(id, payload)
     set((s) => ({
-      list: s.list.map((c) => (c.id === id ? { ...c, ...payload } : c)),
+      list: s.list.map((x) => (x.id === id ? { ...x, ...payload } : x))
     }))
   },
 
   remove: async (id) => {
     await api.remove(id)
-    set((s) => ({ list: s.list.filter((c) => c.id !== id) }))
-  },
+    set((s) => ({ list: s.list.filter((x) => x.id !== id) }))
+  }
 }))

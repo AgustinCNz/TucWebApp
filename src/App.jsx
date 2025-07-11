@@ -8,6 +8,8 @@ import Register from '@/pages/Register'
 import DashboardLayout from '@/layouts/DashboardLayout'
 import Dashboard from '@/pages/dashboard/Dashboard'
 import ClientesPage from '@/pages/dashboard/clientes'
+import ServiciosPage from '@/pages/dashboard/servicios'
+import FinanzasPage from '@/pages/dashboard/finanzas'
 
 function App () {
   const { user } = useAuthStore()
@@ -24,6 +26,8 @@ function App () {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="clientes" element={<ClientesPage />} />
+          <Route path="servicios" element={<ServiciosPage />} />
+          <Route path='finanzas' element={<FinanzasPage />} />
           {/* Agregarás más rutas aquí cuando los demás módulos estén listos */}
         </Route>
       )}
