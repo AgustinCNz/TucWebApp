@@ -4,6 +4,7 @@
 // Provee: user (obj o null), setUser(user) y clearUser().
 // -----------------------------------------------------------------------------
 
+
 import { create } from 'zustand'
 
 // Creamos el store: set -> actualiza estado, get -> lee (no usado aquí)
@@ -12,6 +13,8 @@ export const useAuthStore = create(set => ({
   setUser: user => set({ user }),   // Guarda objeto usuario (de Firebase/MySQL)
   clearUser: () => set({ user: null }) // Limpia sesión
 }))
+
+
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Sugerencias

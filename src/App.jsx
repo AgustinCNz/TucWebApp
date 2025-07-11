@@ -1,44 +1,36 @@
-// src/App.jsx
-// -----------------------------------------------------------------------------
-// Define las rutas principales de la SPA utilizando React Router.
-// -----------------------------------------------------------------------------
-
 import { Route, Routes, Navigate } from 'react-router-dom'
-import { useAuthStore } from './store/useAuthStore'         // Zustand para auth state
+import { useAuthStore } from '@/store/useAuthStore'
 
-import Home from './pages/Home'
-import Login from './pages/Login'
-import Register from './pages/Register'
+import Home from '@/pages/Home'
+import Login from '@/pages/Login'
+import Register from '@/pages/Register'
 
-// Layout y páginas privadas
-import DashboardLayout from './layouts/DashboardLayout'
-import Dashboard from './pages/dashboard/index'
-import Landing from './pages/dashboard/Landing'
-import CrearLanding from './pages/dashboard/CrearLanding'
+import DashboardLayout from '@/layouts/DashboardLayout'
+import Dashboard from '@/pages/dashboard/Dashboard'
+import ClientesPage from '@/pages/dashboard/clientes'
 
 function App () {
-  const { user } = useAuthStore()                           // user === null → no logueado
+  const { user } = useAuthStore()
 
   return (
     <Routes>
-      {/* ─────────────────── Rutas públicas ─────────────────── */}
-      <Route path='/' element={<Home />} />
-      <Route path='/login' element={<Login />} />
-      <Route path='/register' element={<Register />} />
+      {/* Rutas públicas */}
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
 
-      {/* ─────────────────── Rutas privadas ─────────────────── */}
+      {/* Rutas privadas */}
       {user && (
-        <Route path='/dashboard' element={<DashboardLayout />}>
-          <Route index element={<Dashboard />} />            {/* /dashboard */}
-          <Route path='landing' element={<Landing />} />     {/* /dashboard/landing */}
-          <Route path='crear-landing' element={<CrearLanding />} />
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="clientes" element={<ClientesPage />} />
+          {/* Agregarás más rutas aquí cuando los demás módulos estén listos */}
         </Route>
       )}
 
-
-      {/* ─────────────────── Redirección catch-all ─────────────────── */}
+      {/* Catch-all */}
       <Route
-        path='*'
+        path="*"
         element={<Navigate to={user ? '/dashboard' : '/'} />}
       />
     </Routes>
@@ -46,9 +38,3 @@ function App () {
 }
 
 export default App
-
-// Sugerencias
-
-// Extraer un componente <PrivateRoute> para desacoplar lógica de auth.
-
-// Agregá código de lazy loading con React.lazy y Suspense para optimizar.
