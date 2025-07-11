@@ -7,11 +7,11 @@
 import { pool } from '../../config/db.js'
 
 /* ───────────────────────── CRUD ───────────────────────── */
-export async function createClient ({ uid_owner, nombre, email, telefono, nota }) {
+export async function createClient ({ uid_owner, nombre, email, telefono, nota, domicilio, ciudad }) {
   const [result] = await pool.query(
-    `INSERT INTO clients (uid_owner, nombre, email, telefono, nota)
-     VALUES (?, ?, ?, ?, ?)`,
-    [uid_owner, nombre, email, telefono, nota]
+    `INSERT INTO clients (uid_owner, nombre, email, telefono, nota, domicilio, ciudad)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [uid_owner, nombre, email, telefono, nota, domicilio, ciudad]
   )
   return result.insertId
 }
