@@ -1,217 +1,131 @@
 // src/pages/dashboard/importaciones/ImportItems.jsx
 import { useEffect, useState } from 'react'
+import { useImportStore } from '@/store/useImportStore'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useClientStore } from '../../../store/useClientStore.js'
-import * as importApi from '../../../api/imports.js'
-import * as itemApi from '../../../api/import_items.js'
-import { Button } from '../../../components/ui/button.jsx'
 
 export default function ImportItemsPage() {
+  const { id } = useParams()               // id de la importación actual
   const navigate = useNavigate()
-  const { id: importId } = useParams()
-  const { clients } = useClientStore() // Se asume que clients ya fue cargado en algún punto del store
+  const { listItems, fetchItems, addItem, deleteItem } = useImportStore()
 
-  // Datos generales de la importación
-  const [importData, setImportData] = useState({
-    client_id: '',
-    fecha: '',
-    pedido: '',
-    courier: '',
-    tracking_global: ''
+  // Formulario local para agregar un ítem
+  const [form, setForm] = useState({
+    descripcion: '',
+    link: '',
+    costo_usd: '',
+    cantidad: '',
+    imagen_url: ''
   })
 
-  // Factura, lista de ítems y estado de carga
-  const [factura, setFactura] = useState(null)
-  const [items, setItems]     = useState([])
-  const [loading, setLoading] = useState(false)
-
-  // Formulario para ítem (nuevo o edición)
-  const [itemForm, setItemForm]         = useState({ concepto: '', cantidad: 1, precio_usd: '', tracking: '', link_url: '' })
-  const [files, setFiles]               = useState([])
-  const [editingItem, setEditingItem]   = useState(null)
-
-  // Al montar, si hay importId, cargar datos e ítems
+  // Al montar, cargamos los ítems de la importación
   useEffect(() => {
-    if (importId) loadImport()
-  }, [importId])
+    fetchItems(id)
+  }, [id, fetchItems])
 
-  async function loadImport() {
-    const data = await importApi.getImport(importId)
-    setImportData(data)
-    const resp = await importApi.getImportItems(importId)
-    setItems(resp)
-  }
-
-  // Handler genérico para inputs de importación
-  const handleImportChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target
-    setImportData(prev => ({ ...prev, [name]: value }))
+    setForm(f => ({ ...f, [name]: value }))
   }
 
-  // Handler genérico para inputs de ítem
-  const handleItemChange = e => {
-    const { name, value } = e.target
-    setItemForm(prev => ({ ...prev, [name]: value }))
-  }
-
-  // Crear u actualizar importación
-  const handleImportSave = async () => {
-    setLoading(true)
-    if (importId) {
-      await importApi.updateImport(importId, importData)
-    } else {
-      const { id } = await importApi.addImport(importData)
-      navigate(`/dashboard/importaciones/${id}/items`)
-      return
-    }
-    setLoading(false)
-  }
-
-  // Eliminar importación completa
-  const handleImportDelete = async () => {
-    if (!confirm('¿Eliminar toda la importación?')) return
-    await importApi.deleteImport(importId)
-    navigate('/dashboard/importaciones')
-  }
-
-  // Crear o actualizar ítem
-  const handleItemSubmit = async e => {
+  const handleAdd = async (e) => {
     e.preventDefault()
-    setLoading(true)
-    let idSaved
-    if (editingItem) {
-      await itemApi.updateImportItem(editingItem.id, itemForm)
-      idSaved = editingItem.id
-    } else {
-      const { id } = await itemApi.createImportItem({ import_id: Number(importId), ...itemForm })
-      idSaved = id
-    }
-    if (files.length) {
-      await itemApi.uploadImportItemImages(idSaved, files)
-    }
-    await loadImport()
-    resetItemForm()
-    setLoading(false)
-  }
-
-  // Borrar un ítem específico
-  const handleItemDelete = async id => {
-    if (!confirm('¿Eliminar este ítem?')) return
-    await itemApi.deleteImportItem(id)
-    setItems(prev => prev.filter(i => i.id !== id))
-  }
-
-  // Preparar la edición de un ítem existente
-  const handleItemEdit = item => {
-    setEditingItem(item)
-    setItemForm({
-      concepto: item.concepto,
-      cantidad: item.cantidad,
-      precio_usd: item.precio_usd,
-      tracking: item.tracking,
-      link_url: item.link_url
+    await addItem(id, {
+      descripcion: form.descripcion,
+      link: form.link,
+      costo_usd: parseFloat(form.costo_usd),
+      cantidad: parseInt(form.cantidad, 10),
+      imagen_url: form.imagen_url
     })
-    setFiles([])
-  }
-
-  // Resetear formulario de ítem
-  function resetItemForm() {
-    setEditingItem(null)
-    setItemForm({ concepto: '', cantidad: 1, precio_usd: '', tracking: '', link_url: '' })
-    setFiles([])
+    setForm({ descripcion:'', link:'', costo_usd:'', cantidad:'', imagen_url:'' })
   }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <h2 className="text-2xl font-bold">Importación {importId || '(nueva)'}</h2>
+      <h2 className="text-2xl font-bold">Ítems de Importación #{id}</h2>
 
-      {/* Datos generales de importación */}
-      <div className="bg-white p-6 rounded shadow space-y-2">
-        <label>Cliente</label>
-        <select name="client_id" value={importData.client_id} onChange={handleImportChange} className="w-full border p-2 rounded">
-          <option value="">-- Seleccionar cliente --</option>
-          {clients?.map(c => <option key={c.id} value={c.id}>{c.nombre}</option>)}
-        </select>
-
-        <label>Fecha</label>
-        <input type="date" name="fecha" value={importData.fecha} onChange={handleImportChange} className="w-full border p-2 rounded" />
-
-        <label>Pedido</label>
-        <input type="text" name="pedido" value={importData.pedido} onChange={handleImportChange} className="w-full border p-2 rounded" />
-
-        <label>Courier</label>
-        <input type="text" name="courier" value={importData.courier} onChange={handleImportChange} className="w-full border p-2 rounded" />
-
-        <label>Tracking global</label>
-        <input type="text" name="tracking_global" value={importData.tracking_global} onChange={handleImportChange} className="w-full border p-2 rounded" />
-
-        <label>Factura (PDF / IMG)</label>
-        <input type="file" accept=".pdf,image/*" onChange={e => setFactura(e.target.files[0])} className="w-full" />
-
-        <div className="flex gap-4 mt-4">
-          <Button onClick={handleImportSave} disabled={loading}>{importId ? 'Guardar cambios' : 'Crear importación'}</Button>
-          {importId && <Button variant="destructive" onClick={handleImportDelete}>Eliminar importación</Button>}
+      {/* Formulario para agregar ítem */}
+      <form onSubmit={handleAdd} className="bg-white p-4 shadow rounded space-y-3">
+        <div>
+          <label className="block mb-1">Descripción</label>
+          <input name="descripcion" value={form.descripcion} onChange={handleChange}
+            className="w-full border px-3 py-2 rounded" required />
         </div>
-      </div>
-
-      {/* Formulario de ítems */}
-      {importId && (
-        <form onSubmit={handleItemSubmit} className="bg-white p-6 rounded shadow space-y-4">
-          <h3 className="text-xl">{editingItem ? 'Editar ítem' : 'Nuevo ítem'}</h3>
-
-          <label>Concepto</label>
-          <input type="text" name="concepto" value={itemForm.concepto} onChange={handleItemChange} className="w-full border p-2 rounded" required />
-
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <label>Cantidad</label>
-              <input type="number" name="cantidad" min={1} value={itemForm.cantidad} onChange={handleItemChange} className="w-full border p-2 rounded" required />
-            </div>
-            <div className="flex-1">
-              <label>Precio USD</label>
-              <input type="number" name="precio_usd" step="0.01" value={itemForm.precio_usd} onChange={handleItemChange} className="w-full border p-2 rounded" required />
-            </div>
+        <div>
+          <label className="block mb-1">Link (respaldo)</label>
+          <input name="link" value={form.link} onChange={handleChange}
+            className="w-full border px-3 py-2 rounded" />
+        </div>
+        <div className="flex gap-4">
+          <div className="flex-1">
+            <label className="block mb-1">Costo USD</label>
+            <input name="costo_usd" type="number" step="0.01" value={form.costo_usd}
+              onChange={handleChange} className="w-full border px-3 py-2 rounded" />
           </div>
-
-          <label>Tracking (opcional)</label>
-          <input type="text" name="tracking" value={itemForm.tracking} onChange={handleItemChange} className="w-full border p-2 rounded" />
-
-          <label>Link URL (opcional)</label>
-          <input type="url" name="link_url" value={itemForm.link_url} onChange={handleItemChange} className="w-full border p-2 rounded" />
-
-          <label>Imágenes (max 10)</label>
-          <input type="file" multiple accept="image/*" onChange={e => setFiles(Array.from(e.target.files))} className="w-full" />
-
-          <div className="flex gap-4">
-            <Button type="submit" disabled={loading}>{editingItem ? 'Actualizar ítem' : 'Agregar ítem'}</Button>
-            {editingItem && <Button variant="outline" onClick={resetItemForm}>Cancelar</Button>}
+          <div className="flex-1">
+            <label className="block mb-1">Cantidad</label>
+            <input name="cantidad" type="number" value={form.cantidad}
+              onChange={handleChange} className="w-full border px-3 py-2 rounded" />
           </div>
-        </form>
-      )}
+        </div>
+        <div>
+          <label className="block mb-1">URL Imagen</label>
+          <input name="imagen_url" value={form.imagen_url} onChange={handleChange}
+            className="w-full border px-3 py-2 rounded" />
+        </div>
+        <div className="text-right">
+          <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
+            Agregar Ítem
+          </button>
+        </div>
+      </form>
 
       {/* Listado de ítems */}
-      {importId && items.length > 0 && (
-        <div className="space-y-4">
-          {items.map(item => (
-            <div key={item.id} className="bg-gray-50 p-4 rounded shadow flex justify-between items-start">
-              <div>
-                <p><strong>{item.concepto}</strong> ×{item.cantidad} — ${item.precio_usd}</p>
-                {item.tracking && <p className="text-sm">Track: {item.tracking}</p>}
-                {item.link_url && (
-                  <a href={item.link_url} target="_blank" rel="noopener noreferrer" className="underline text-blue-600">Ver anuncio</a>
-                )}
-                <div className="flex gap-2 mt-2">
-                  {item.images?.map(img => <img key={img.id} src={img.url} className="h-16 rounded" />)}
-                </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <Button size="sm" onClick={() => handleItemEdit(item)}>Editar</Button>
-                <Button size="sm" variant="destructive" onClick={() => handleItemDelete(item.id)}>Borrar</Button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      <div className="bg-white shadow rounded overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="px-4 py-2">Descripción</th>
+              <th className="px-4 py-2">Link</th>
+              <th className="px-4 py-2">Costo</th>
+              <th className="px-4 py-2">Cant.</th>
+              <th className="px-4 py-2">Imagen</th>
+              <th className="px-4 py-2">Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {listItems.map(item => (
+              <tr key={item.id} className="border-t">
+                <td className="px-4 py-2">{item.descripcion}</td>
+                <td className="px-4 py-2">
+                  {item.link && <a href={item.link} target="_blank" className="text-blue-600 hover:underline">Ver</a>}
+                </td>
+                <td className="px-4 py-2">${item.costo_usd}</td>
+                <td className="px-4 py-2">{item.cantidad}</td>
+                <td className="px-4 py-2">
+                  {item.imagen_url && <img src={item.imagen_url} alt="" className="h-10 inline-block" />}
+                </td>
+                <td className="px-4 py-2">
+                  <button
+                    onClick={() => deleteItem(id, item.id)}
+                    className="text-red-600 hover:underline"
+                  >
+                    Borrar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="text-right">
+        <button
+          onClick={() => navigate('/importaciones')}
+          className="text-gray-600 hover:underline"
+        >
+          ← Volver al listado
+        </button>
+      </div>
     </div>
   )
 }

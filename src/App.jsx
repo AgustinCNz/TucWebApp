@@ -1,49 +1,33 @@
-import { Route, Routes, Navigate } from 'react-router-dom'
-import { useAuthStore } from '@/store/useAuthStore'
+// src/App.jsx
+import { Routes, Route, Navigate } from 'react-router-dom'
+import ImportsLayout from '@/layouts/ImportsLayout'                      // Layout de Importaciones
+import ListImports from '@/pages/dashboard/importaciones/ListImports'    // Listado
+import ImportForm from '@/pages/dashboard/importaciones/ImportForm'      // Crear/Editar
+import ImportItemsPage from '@/pages/dashboard/importaciones/ImportItems'// Ítems
 
-import Home from '@/pages/Home'
-import Login from '@/pages/Login'
-import Register from '@/pages/Register'
-
-import DashboardLayout from '@/layouts/DashboardLayout'
-import Dashboard from '@/pages/dashboard/Dashboard'
-import ClientesPage from '@/pages/dashboard/clientes'
-import ServiciosPage from '@/pages/dashboard/servicios'
-import FinanzasPage from '@/pages/dashboard/finanzas'
-import ImportacionesPage from '@/pages/dashboard/importaciones/ImportItems'
-import ImportItemsPage from './pages/dashboard/importaciones/ImportItems'
-
-function App () {
-  const { user } = useAuthStore()
-
+export default function App() {
   return (
     <Routes>
-      {/* Rutas públicas */}
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      {/* Redirige raíz a Importaciones */}
+      <Route path="/" element={<Navigate to="/importaciones" replace />} />
 
-      {/* Rutas privadas */}
-      {user && (
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="clientes" element={<ClientesPage />} />
-          <Route path="servicios" element={<ServiciosPage />} />
-          <Route path='finanzas' element={<FinanzasPage />} />
-          <Route path='importaciones' element={<ImportacionesPage />} />
-          <Route path='importaciones/items/:id' element={<ImportItemsPage />} />
+      {/* Módulo Importaciones */}
+      <Route path="/importaciones" element={<ImportsLayout />}>
+        {/* /importaciones → listado */}
+        <Route index element={<ListImports />} />
 
-          {/* Agregarás más rutas aquí cuando los demás módulos estén listos */}
-        </Route>
-      )}
+        {/* /importaciones/new → crear nueva importación */}
+        <Route path="new" element={<ImportForm />} />
 
-      {/* Catch-all */}
-      <Route
-        path="*"
-        element={<Navigate to={user ? '/dashboard' : '/'} />}
-      />
+        {/* /importaciones/:id/edit → editar existente */}
+        <Route path=":id/edit" element={<ImportForm />} />
+
+        {/* /importaciones/items/:id → ver/editar ítems */}
+        <Route path="items/:id" element={<ImportItemsPage />} />
+      </Route>
+
+      {/* Cualquier otra ruta → /importaciones */}
+      <Route path="*" element={<Navigate to="/importaciones" replace />} />
     </Routes>
   )
 }
-
-export default App
