@@ -1,8 +1,7 @@
-// backend/index.js
+// backend/src/app.js
 // -----------------------------------------------------------------------------
 // Punto de entrada del servidor Express. Aquí configuramos middlewares,
-// rutas y verificamos la conexión con MySQL. Comentado bloque por bloque
-// para que cualquier desarrollador entienda el flujo completo.
+// rutas y verificamos la conexión con MySQL.
 // -----------------------------------------------------------------------------
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -19,11 +18,14 @@ import contactoRoutes from './routes/contacto.routes.js'   // Formulario de cont
 import usuariosRoutes from './routes/usuarios.routes.js'   // Gestión de usuarios
 import landingsRoutes from './routes/landings.routes.js'   // CRUD de landing pages
 
-// Importar rutas de módulos específicos (ej. clientes, servicios, etc.)
+// Importar rutas de módulos específicos
 import clientRoutes from './modules/clients/client.routes.js'
 import serviceRoutes from './modules/services/service.routes.js'
 import financeRoutes from './modules/finances/finance.routes.js'
 import importRoutes from './modules/imports/import.routes.js'
+
+// ✅ Importar rutas del sub-módulo de ítems de importación
+import importItemsRoutes from './modules/imports/import_items.routes.js'
 
 // ──────────────────────────────────────────────────────────────────────────────
 // ► 3. Configuración de base de datos (MySQL pool)
@@ -40,9 +42,7 @@ dotenv.config() // Lee .env y expone las keys en process.env
 // ──────────────────────────────────────────────────────────────────────────────
 const app = express()
 
-// Middlewares globales
-app.use(cors())          // Por defecto permite cualquier origen → configurar en prod
-app.use(express.json())  // Parsea JSON del body a req.body
+// Middlewares globales\app.use(cors())          // Permite peticiones CORS\app.use(express.json())  // Parsea JSON del body a req.body
 
 // ──────────────────────────────────────────────────────────────────────────────
 // ► 6. Montaje de rutas
@@ -50,10 +50,13 @@ app.use(express.json())  // Parsea JSON del body a req.body
 app.use('/api/contacto', contactoRoutes)   // → /api/contacto/*
 app.use('/api/usuarios', usuariosRoutes)   // → /api/usuarios/*
 app.use('/api/landings', landingsRoutes)   // → /api/landings/*
-app.use('/api/clients', clientRoutes) // → /api/clients/*
-app.use('/api/services', serviceRoutes) // → /api/services/*
-app.use('/api/finances', financeRoutes) // → /api/finances/*
-app.use('/api/imports', importRoutes) // → /api/imports/*
+app.use('/api/clients', clientRoutes)      // → /api/clients/*
+app.use('/api/services', serviceRoutes)    // → /api/services/*
+app.use('/api/finances', financeRoutes)    // → /api/finances/*
+app.use('/api/imports', importRoutes)      // → /api/imports/*
+// Montaje del router de ítems de importación
+app.use('/api/import_items', importItemsRoutes) // → /api/import_items/*
+
 // ──────────────────────────────────────────────────────────────────────────────
 // ► 7. Verificación de conexión a MySQL (al arrancar)
 // ──────────────────────────────────────────────────────────────────────────────
@@ -63,14 +66,11 @@ pool.getConnection()
 
 // ──────────────────────────────────────────────────────────────────────────────
 // ► 8. Endpoints extra (quick & dirty)
-//    ⚠️  Duplican lógica existente en usuariosRoutes; mantener solo si hace falta
 // ──────────────────────────────────────────────────────────────────────────────
-
-// Crear usuario
+// (estas rutas duplican lógica de usuariosRoutes; se pueden eliminar si no son necesarias)
 app.post('/api/usuarios', async (req, res) => {
-  const { uid, email } = req.body                 // Desestructuramos payload
+  const { uid, email } = req.body
   try {
-    // Consulta parametrizada para evitar SQL Injection
     await pool.query('INSERT INTO usuarios (uid, email) VALUES (?, ?)', [uid, email])
     res.status(201).json({ message: 'Usuario guardado en base de datos' })
   } catch (error) {
@@ -79,15 +79,12 @@ app.post('/api/usuarios', async (req, res) => {
   }
 })
 
-// Obtener usuario por UID
 app.get('/api/usuarios/:uid', async (req, res) => {
   const { uid } = req.params
   try {
     const [rows] = await pool.query('SELECT * FROM usuarios WHERE uid = ?', [uid])
-    if (rows.length === 0) {
-      return res.status(404).json({ error: 'Usuario no encontrado' })
-    }
-    res.json(rows[0]) // Devolvemos el registro
+    if (rows.length === 0) return res.status(404).json({ error: 'Usuario no encontrado' })
+    res.json(rows[0])
   } catch (error) {
     console.error('Error al obtener usuario:', error)
     res.status(500).json({ error: 'Error interno del servidor' })
@@ -98,25 +95,6 @@ app.get('/api/usuarios/:uid', async (req, res) => {
 // ► 9. Lanzamos el servidor
 // ──────────────────────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`)
-})
+app.listen(PORT, () => console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`))
 
-// Exportamos la app para pruebas unitarias / integración
 export default app
-
-// ──────────────────────────────────────────────────────────────────────────────
-// ► Sugerencias de mejora
-// ──────────────────────────────────────────────────────────────────────────────
-//
-// 1. Unificar endpoints de usuarios en usuariosRoutes para evitar duplicación y
-//    roces con middlewares de validación o autenticación.
-// 2. Liberar la conexión de prueba con `conn.release()` para no dejar hilos
-//    colgados si reiniciás frecuentemente el servidor en desarrollo.
-// 3. Implementar un middleware global de manejo de errores (`errorHandler`) y
-//    llamar a `next(err)` desde los controladores.
-// 4. Configurar CORS con origenes específicos en producción para mayor seguridad.
-// 5. Validar el cuerpo de las peticiones con Joi/Zod o express-validator antes de
-//    interactuar con la BD.
-//
-// -----------------------------------------------------------------------------
